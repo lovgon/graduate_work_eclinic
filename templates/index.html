@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <title>ECLINIC - Главная</title>
+</head>
+
+<body class="bg-light">
+<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
+    <div class="container">
+        {% url 'home' as url_home %}
+        <a class="navbar-brand" href="{{ url_home }}">ECLINIC</a>
+        <div class="row">
+            <div class="col-auto">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+
+                        {% if request.user.is_authenticated %}
+
+                            {% url 'account' as url_account %}
+                            <a class="btn" href="{{ url_account }}">{{ request.user.username }}</a>
+
+                            {% url 'logout' as url_logout %}
+                            <a class="btn btn-outline-danger" href="{{ url_logout }}">Выйти</a>
+
+                        {% else %}
+
+                            {% url 'login' as url_login %}
+                            <a class="btn btn-outline-primary {% if url_login == request.path %}active{% endif %}" href="{{ url_login }}">Вход</a>
+
+                            {% url 'register' as url_register %}
+                            <a class="btn btn-outline-primary {% if url_register == request.path %}active{% endif %}" href="{{ url_register }}">Регистрация</a>
+
+                            {% url 'account' as url_account %}
+                            <a class="btn btn-outline-primary {% if url_account == request.path %}active{% endif %}" href="{{ url_account }}">Личный кабинет</a>
+
+                        {% endif %}
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    {% block content %}
+        <div class="alert alert-info mt-4" role="alert">
+            Чтобы заказать справку войдите в личный кабинет
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Зарегестрированные пользователи</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover card-text">
+                        <thead class="thead-light text-center">
+                        <tr>
+                            <td>Email</td>
+                            <td>Пользователь</td>
+                            <td>Дата регистрации</td>
+                            <td>Последний вход</td>
+                            <td>Админ</td>
+                            <td>Активный</td>
+                            <td>Сотрудник</td>
+                            <td>Суперюзер</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for account in accounts %}
+                            <tr>
+                                {% include 'snippets/body_snippet.html' with value=account %}
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</div>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>

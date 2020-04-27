@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <div class="col-5 mx-auto mt-4">
+        <div class="card">
+            <form method="post" class="card-body">
+                <h5 class="card-title">Вход</h5>
+                <div class="form-group">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="inputEmail" class="col-form-label">Email</label>
+                        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus>
+                        <label for="inputPassword" class="col-form-label">Пароль</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Пароль" required autofocus>
+                    </div>
+
+                    {% for field in login_form %}
+                        {% for error in field.errors %}
+                            <p class="alert alert-danger">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% if login_form.non_field_errors %}
+                        <div class="text-danger">{{ login_form.non_field_errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Войти</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

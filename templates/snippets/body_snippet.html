@@ -1,0 +1,28 @@
+<td>{{ value.email }}</td>
+<td>{{ value.username }}</td>
+<td>{{ value.date_joined }}</td>
+<td>{{ value.last_login }}</td>
+
+{% if value.is_admin == True %}
+    <td class="table-success text-center">{{ value.is_admin }}</td>
+{% else %}
+    <td class="table-danger text-center">{{ value.is_admin }}</td>
+{% endif %}
+
+{% if value.is_active == True %}
+    <td class="table-success text-center">{{ value.is_active }}</td>
+{% else %}
+    <td class="table-danger text-center">{{ value.is_active }}</td>
+{% endif %}
+
+{% if value.is_staff == True %}
+    <td class="table-success text-center">{{ value.is_staff }}</td>
+{% else %}
+    <td class="table-danger text-center">{{ value.is_staff }}</td>
+{% endif %}
+
+{% if value.is_superuser == True %}
+    <td class="table-success text-center">{{ value.is_superuser }}</td>
+{% else %}
+    <td class="table-danger text-center">{{ value.is_superuser }}</td>
+{% endif %}
