@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
 from .forms import RegistrationForm, AccountAuthenticationForm, AccountUpdateForm
+from certificates.forms import CertificateForm
 from .models import Account
 
 
@@ -72,18 +73,19 @@ def account_view(request):
         return redirect('login')
 
     success_massage = 0
+    certificate_form = CertificateForm()
 
     if request.POST:
-        form = AccountUpdateForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.initial = {
+        account_form = AccountUpdateForm(request.POST, instance=request.user)
+        if account_form.is_valid():
+            account_form.initial = {
                 "email": request.POST['email'],
                 "username": request.POST['username'],
             }
-            form.save()
+            account_form.save()
             success_massage = "Updated"
     else:
-        form = AccountUpdateForm(
+        account_form = AccountUpdateForm(
             initial={
                 "email": request.user.email,
                 "username": request.user.username,
@@ -91,7 +93,8 @@ def account_view(request):
         )
 
     context = {
-        'account_form': form,
+        'account_form': account_form,
+        'certificate_form': certificate_form,
         'success_message': success_massage,
     }
     return render(request, 'account.html', context)
