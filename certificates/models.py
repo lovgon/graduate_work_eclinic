@@ -10,12 +10,21 @@ class Hospital(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'медицинское учереждение'
+        verbose_name_plural = 'Медицинские учереждения'
+
 
 class CertificateType(models.Model):
-    name = models.CharField(max_length=120, verbose_name='Форма справки')
+    name = models.CharField(max_length=255, verbose_name='Название мед. документа')
+    form = models.CharField(max_length=128, verbose_name='Форма мед. документа')
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'форму справок'
+        verbose_name_plural = 'Формы справок'
 
 
 class Certificate(models.Model):
@@ -26,4 +35,8 @@ class Certificate(models.Model):
     executed_date = models.DateTimeField(verbose_name='Дата выдачи справки', auto_now_add=True)
 
     def __str__(self):
-        return f"{self.certificate_type} {self.hospital} {self.client} {self.created_date} {self.executed_date}"
+        return f"{self.certificate_type} {self.hospital} {self.client}"
+
+    class Meta:
+        verbose_name = 'готовую справку'
+        verbose_name_plural = 'Готовые справки'

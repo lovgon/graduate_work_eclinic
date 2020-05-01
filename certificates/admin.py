@@ -5,14 +5,27 @@ from certificates.models import Hospital, CertificateType, Certificate
 
 @admin.register(Hospital)
 class HospitalAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'name',
+        'address',
+    )
 
 
 @admin.register(CertificateType)
 class CertificateTypeAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'name',
+        'form',
+    )
 
 
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'certificate_type',
+        'hospital',
+        'client',
+        'created_date',
+        'executed_date',
+    )
+

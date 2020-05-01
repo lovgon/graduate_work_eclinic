@@ -41,6 +41,7 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     # first_name = models.CharField(max_length=30)
+    hospital = models.ForeignKey('certificates.Hospital', on_delete=models.PROTECT, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
@@ -59,3 +60,7 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+    class Meta:
+        verbose_name = 'аккаунт'
+        verbose_name_plural = 'Аккаунты'

@@ -2,15 +2,18 @@ from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
 from .forms import RegistrationForm, AccountAuthenticationForm, AccountUpdateForm
-from certificates.forms import CertificateForm
 from .models import Account
+from certificates.forms import CertificateForm
+from certificates.models import Certificate
 
 
 def home_screen_view(request):
     accounts = Account.objects.all()
+    filed_certificates = Certificate.objects.all()
 
     context = {
         'accounts': accounts,
+        'filed_certificates': filed_certificates,
     }
 
     return render(request, 'index.html', context)
@@ -96,5 +99,6 @@ def account_view(request):
         'account_form': account_form,
         'certificate_form': certificate_form,
         'success_message': success_massage,
+        'certificates': Certificate.objects.filter(hospital=request.user.hospital)
     }
     return render(request, 'account.html', context)

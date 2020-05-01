@@ -45,13 +45,43 @@
     </div>
 </nav>
 
-<div class="container mt-4">
+<div class="container mt-3">
     {% block content %}
-        <div class="alert alert-info mt-4" role="alert">
+        <div class="alert alert-info" role="alert">
             Чтобы заказать справку войдите в личный кабинет
         </div>
 
-        <div class="card">
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title">Поданные заявки на выдачу справок</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover card-text">
+                        <thead class="thead-light text-center">
+                        <tr>
+                            <td>Форма</td>
+                            <td>Медицинское учереждение</td>
+                            <td>Email клиента</td>
+                            <td>Дата подачи</td>
+                            <td>Дата выдачи</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for filed_certificate in filed_certificates %}
+                            <tr>
+                                <td>{{ filed_certificate.certificate_type }}</td>
+                                <td>{{ filed_certificate.hospital }}</td>
+                                <td>{{ filed_certificate.client }}</td>
+                                <td>{{ filed_certificate.created_date }}</td>
+                                <td>{{ filed_certificate.executed_date }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-3">
             <div class="card-body">
                 <h5 class="card-title">Зарегестрированные пользователи</h5>
                 <div class="table-responsive">

@@ -7,6 +7,7 @@ class AccountAdmin(UserAdmin):
     list_display = (
         'email',
         'username',
+        'hospital',
         'date_joined',
         'last_login',
         'is_admin',
