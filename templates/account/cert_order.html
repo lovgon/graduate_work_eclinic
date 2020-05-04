@@ -1,0 +1,20 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills">
+                <a href="{% url 'cert_signature' %}" class="nav-link">Заказанные справки</a>
+                <a href="{% url 'cert_order' %}" class="nav-link active">Справки</a>
+                <a href="{% url 'account' %}" class="nav-link">Профиль</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <form method="POST" class="card card-body">
+                {% csrf_token %}
+                {{ certificate_form }}
+                <button type="submit" class="btn btn-primary btn-block mt-3 col-3 mx-auto">Заказать справку</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

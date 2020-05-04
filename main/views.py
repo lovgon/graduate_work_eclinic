@@ -76,7 +76,6 @@ def account_view(request):
         return redirect('login')
 
     success_massage = 0
-    certificate_form = CertificateForm()
 
     if request.POST:
         account_form = AccountUpdateForm(request.POST, instance=request.user)
@@ -86,7 +85,7 @@ def account_view(request):
                 "username": request.POST['username'],
             }
             account_form.save()
-            success_massage = "Updated"
+            success_massage = "Обновлено"
     else:
         account_form = AccountUpdateForm(
             initial={
@@ -97,8 +96,6 @@ def account_view(request):
 
     context = {
         'account_form': account_form,
-        'certificate_form': certificate_form,
         'success_message': success_massage,
-        'certificates': Certificate.objects.filter(hospital=request.user.hospital)
     }
-    return render(request, 'account.html', context)
+    return render(request, 'account/profile.html', context)

@@ -7,7 +7,9 @@
     <title>ECLINIC - Главная</title>
 </head>
 
+
 <body class="bg-light">
+
 <nav class="navbar navbar-light" style="background-color: #e3f2fd;">
     <div class="container">
         {% url 'home' as url_home %}
@@ -19,8 +21,8 @@
 
                         {% if request.user.is_authenticated %}
 
-                            {% url 'account' as url_account %}
-                            <a class="btn" href="{{ url_account }}">{{ request.user.username }}</a>
+                            {% url 'cert_signature' as cert_signature %}
+                            <a class="btn" href="{{ cert_signature }}">{{ request.user.username }}</a>
 
                             {% url 'logout' as url_logout %}
                             <a class="btn btn-outline-danger" href="{{ url_logout }}">Выйти</a>
@@ -33,8 +35,8 @@
                             {% url 'register' as url_register %}
                             <a class="btn btn-outline-primary {% if url_register == request.path %}active{% endif %}" href="{{ url_register }}">Регистрация</a>
 
-                            {% url 'account' as url_account %}
-                            <a class="btn btn-outline-primary {% if url_account == request.path %}active{% endif %}" href="{{ url_account }}">Личный кабинет</a>
+                            {% url 'cert_signature' as url_cert_signature %}
+                            <a class="btn btn-outline-primary {% if cert_signature == request.path %}active{% endif %}" href="{{ cert_signature }}">Личный кабинет</a>
 
                         {% endif %}
 

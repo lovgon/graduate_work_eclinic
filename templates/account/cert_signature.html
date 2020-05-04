@@ -1,0 +1,41 @@
+{% extends 'index.html' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-3">
+            <div class="nav flex-column nav-pills">
+                <a href="{% url 'cert_signature' %}" class="nav-link active">Заказанные справки</a>
+                <a href="{% url 'cert_order' %}" class="nav-link">Справки</a>
+                <a href="{% url 'account' %}" class="nav-link">Профиль</a>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="card card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover card-text">
+                        <thead class="thead-light text-center">
+                        <tr>
+                            <td>Форма</td>
+                            <td>Медицинское учереждение</td>
+                            <td>Email клиента</td>
+                            <td>Дата подачи</td>
+                            <td>Дата выдачи</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cert_sinature in cert_signature_form %}
+                            <tr>
+                                <td>{{ cert_sinature.certificate_type }}</td>
+                                <td>{{ cert_sinature.hospital }}</td>
+                                <td>{{ cert_sinature.client }}</td>
+                                <td>{{ cert_sinature.created_date }}</td>
+                                <td>{{ cert_sinature.executed_date }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
