@@ -8,8 +8,13 @@ from certificates.models import Certificate
 
 
 def home_screen_view(request):
-    accounts = Account.objects.all()
-    filed_certificates = Certificate.objects.all()
+    accounts = Account.objects.order_by('-last_login')
+
+    filed_certificates = Certificate.objects.order_by(
+        'status',
+        '-executed_date',
+        '-created_date'
+    )
 
     context = {
         'accounts': accounts,

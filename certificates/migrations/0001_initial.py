@@ -15,29 +15,93 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='CertificateType',
+            name="CertificateType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=120, verbose_name='Форма справки')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=120, verbose_name="Форма справки"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Hospital',
+            name="Hospital",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=2000, verbose_name='Название больницы')),
-                ('address', models.CharField(max_length=255, verbose_name='Адрес больницы')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(max_length=2000, verbose_name="Название больницы"),
+                ),
+                (
+                    "address",
+                    models.CharField(max_length=255, verbose_name="Адрес больницы"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Certificate',
+            name="Certificate",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('created_date', models.DateTimeField(auto_now_add=True, verbose_name='Дата подачи заявки')),
-                ('executed_date', models.DateTimeField(auto_now_add=True, verbose_name='Дата выдачи справки')),
-                ('certificate_type', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='certificates.CertificateType', verbose_name='Тип справки')),
-                ('client', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL, verbose_name='Пациент')),
-                ('hospital', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='certificates.Hospital', verbose_name='Мед. учереждение')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "created_date",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Дата подачи заявки"
+                    ),
+                ),
+                (
+                    "executed_date",
+                    models.DateTimeField(
+                        auto_now_add=True, verbose_name="Дата выдачи справки"
+                    ),
+                ),
+                (
+                    "certificate_type",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="certificates.CertificateType",
+                        verbose_name="Тип справки",
+                    ),
+                ),
+                (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Пациент",
+                    ),
+                ),
+                (
+                    "hospital",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        to="certificates.Hospital",
+                        verbose_name="Мед. учереждение",
+                    ),
+                ),
             ],
         ),
     ]

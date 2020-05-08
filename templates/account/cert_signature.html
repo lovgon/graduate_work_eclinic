@@ -2,39 +2,150 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <div class="nav flex-column nav-pills">
-                <a href="{% url 'cert_signature' %}" class="nav-link active">Заказанные справки</a>
+                {% if request.user.hospital != Null %}
+                    <a href="{% url 'cert_signature' %}" class="nav-link active">Заказанные справки</a>
+                {% endif %}
                 <a href="{% url 'cert_order' %}" class="nav-link">Справки</a>
                 <a href="{% url 'account' %}" class="nav-link">Профиль</a>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             <div class="card card-body">
+                <div>
+                    <h5 class="float-left card-title">Заявки на выдачу справок</h5>
+                    <nav aria-label="Page navigation example" class="float-right">
+                        <ul class="pagination pagination-sm card-text justify-content-end">
+                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
+
                 <div class="table-responsive">
-                    <table class="table table-bordered table-hover card-text">
-                        <thead class="thead-light text-center">
+                    <table class="table table-bordered table-hover card-text align-middle">
+
+                        <thead class="thead-light text-center align-middle">
                         <tr>
-                            <td>Форма</td>
-                            <td>Медицинское учереждение</td>
-                            <td>Email клиента</td>
-                            <td>Дата подачи</td>
-                            <td>Дата выдачи</td>
+                            <td class="align-middle">id</td>
+                            <td class="align-middle">Название формы</td>
+                            <td class="align-middle">Форма</td>
+                            <td class="align-middle">Клиент</td>
+                            <td class="align-middle">Дата подачи</td>
+                            <td class="align-middle">Дата выдачи</td>
+                            <td class="align-middle">Статус</td>
                         </tr>
                         </thead>
+
                         <tbody>
-                        {% for cert_sinature in cert_signature_form %}
-                            <tr>
-                                <td>{{ cert_sinature.certificate_type }}</td>
-                                <td>{{ cert_sinature.hospital }}</td>
-                                <td>{{ cert_sinature.client }}</td>
-                                <td>{{ cert_sinature.created_date }}</td>
-                                <td>{{ cert_sinature.executed_date }}</td>
+                        {% for cert_signature in cert_signature_form %}
+                            <tr data-toggle="modal" data-target="#exampleModal{{ cert_signature.id }}">
+                                <td class="align-middle text-right">{{ cert_signature.id }}</td>
+                                <td class="align-middle">{{ cert_signature.certificate_type.name }}</td>
+
+                                {% if cert_signature.certificate_type.form == None %}
+                                    <td class="align-middle text-center">-</td>
+                                {% else %}
+                                    <td class="align-middle">{{ cert_signature.certificate_type.form }}</td>
+                                {% endif %}
+
+                                <td class="align-middle">{{ cert_signature.client.username }}</td>
+                                <td class="align-middle">{{ cert_signature.created_date }}</td>
+
+                                {% if cert_signature.status == "confirmed" %}
+                                    <td class="align-middle">{{ cert_signature.executed_date }}</td>
+                                    <td class="align-middle table-success text-center">Подтверждено</td>
+                                {% elif cert_signature.status == "denied" %}
+                                    <td class="align-middle">{{ cert_signature.executed_date }}</td>
+                                    <td class="align-middle table-danger text-center">Отказано</td>
+                                {% else %}
+                                    <td class="align-middle text-center">-</td>
+                                    <td class="align-middle table-secondary">В обработке</td>
+                                {% endif %}
+
+                                <!-- Modal -->
+                                <div class="modal fade" id="exampleModal{{ cert_signature.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">{{ cert_signature.id }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <form>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Тип справки (Название):</label>
+                                                        <div class="col-9">{{ cert_signature.certificate_type.name }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Тип справки (Форма):</label>
+                                                        <div class="col-9">{{ cert_signature.certificate_type.form }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Мед. учереждение (Название):</label>
+                                                        <div class="col-9">{{ cert_signature.hospital.name }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Мед. учереждение (Адрес):</label>
+                                                        <div class="col-9">{{ cert_signature.hospital.address }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Пациент:</label>
+                                                        <div class="col-9">{{ cert_signature.client.username }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Врач:</label>
+                                                        <div class="col-9">{{ cert_signature.doctor }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Дата подачи заявки:</label>
+                                                        <div class="col-9">{{ cert_signature.created_date }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Дата выдачи справки:</label>
+                                                        <div class="col-9">{{ cert_signature.executed_date }}</div>
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3">Статус:</label>
+                                                        {% if cert_signature.status == "confirmed" %}
+                                                            <div class="col-9 text-success">Подтверждено</div>
+                                                        {% elif cert_signature.status == "denied" %}
+                                                            <div class="col-9 text-danger">Отказано</div>
+                                                        {% else %}
+                                                            <div class="col-9 text-secondary">В обработке</div>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="form-group row">
+                                                        <label for="recipient-name" class="col-3 col-form-label">Дополнительые поля:</label>
+                                                        <div class="col-9"><input type="text" class="form-control" id="recipient-name" value="{{ cert_types_form }}"></div>
+                                                    </div>
+                                                </form>
+                                            </div>
+
+
+                                                {% if cert_signature.status == "in_processing" %}
+                                                    <div class="modal-footer">
+                                                        <a href="{% url 'cert_apply' cert_signature.id %}" class="col btn btn-outline-success">Подтвердить</a>
+                                                        <a href="{% url 'cert_deni' cert_signature.id %}" class="col btn btn-outline-danger">Отказать</a>
+                                                    </div>
+                                                {% else %}
+
+                                                {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
                             </tr>
                         {% endfor %}
                         </tbody>
+
                     </table>
                 </div>
+
             </div>
         </div>
     </div>

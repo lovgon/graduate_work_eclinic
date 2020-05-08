@@ -2,22 +2,32 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <div class="nav flex-column nav-pills">
-                <a href="{% url 'cert_signature' %}" class="nav-link">Заказанные справки</a>
+                {% if request.user.hospital != Null %}
+                    <a href="{% url 'cert_signature' %}" class="nav-link">Заказанные справки</a>
+                {% endif %}
                 <a href="{% url 'cert_order' %}" class="nav-link">Справки</a>
                 <a href="{% url 'account' %}" class="nav-link active">Профиль</a>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             <form method="post" class="card card-body">
                 <div class="form-group">
                     {% csrf_token %}
-                    <div class="mb-3 row">
-                        <label for="inputEmail" class="col-sm-3 col-form-label">Email</label>
-                        <div class="col-sm-9"><input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus value="{{ account_form.initial.email }}"></div>
-                        <label for="inputUsername" class="col-sm-3 col-form-label mt-3">Имя пользователя</label>
-                        <div class="col-sm-9 mt-3"><input type="text" name="username" id="inputUsername" class="form-control" placeholder="Имя пользователя" required autofocus value="{{ account_form.initial.username }}"></div>
+                    <div class="row">
+                        <label for="inputEmail" class="col-sm-2 col-form-label">Email</label>
+                        <div class="col-sm-10"><input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required autofocus value="{{ account_form.initial.email }}"></div>
+
+                        <label for="inputUsername" class="col-sm-2 col-form-label mt-3">Имя пользователя</label>
+                        <div class="col-sm-10 mt-3"><input type="text" name="username" id="inputUsername" class="form-control" placeholder="Имя пользователя" required autofocus value="{{ account_form.initial.username }}"></div>
+
+                        {% if request.user.hospital == None %}
+
+                        {% else %}
+                            <label for="staticHospital" class="col-sm-2 col-form-label mt-3">Сотрудник больницы</label>
+                            <div class="col-sm-10 mt-3"><input type="text" readonly class="form-control-plaintext" id="staticHospital" value="{{ request.user.hospital }}"></div>
+                        {% endif %}
                     </div>
 
                     {% for field in account_form %}

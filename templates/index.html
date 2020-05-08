@@ -4,77 +4,109 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <title>ECLINIC - Главная</title>
+    <title>ECLINIC</title>
 </head>
 
 
 <body class="bg-light">
 
-<nav class="navbar navbar-light" style="background-color: #e3f2fd;">
-    <div class="container">
-        {% url 'home' as url_home %}
-        <a class="navbar-brand" href="{{ url_home }}">ECLINIC</a>
-        <div class="row">
-            <div class="col-auto">
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
+<nav class="navbar navbar-light border-bottom" style="background-color: #e3f2fd;">
+    {% url 'home' as url_home %}
+    <a class="navbar-brand" href="{{ url_home }}">ECLINIC</a>
+    <div class="row">
+        <div class="col-auto">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
 
-                        {% if request.user.is_authenticated %}
+                    {% if request.user.is_authenticated %}
 
-                            {% url 'cert_signature' as cert_signature %}
-                            <a class="btn" href="{{ cert_signature }}">{{ request.user.username }}</a>
+                        {% url 'cert_signature' as url_cert_signature %}
+                        <a class="btn" href="{{ url_cert_signature }}">{{ request.user.username }}</a>
 
-                            {% url 'logout' as url_logout %}
-                            <a class="btn btn-outline-danger" href="{{ url_logout }}">Выйти</a>
+                        {% url 'logout' as url_logout %}
+                        <a class="btn btn-outline-danger" href="{{ url_logout }}">Выйти</a>
 
-                        {% else %}
+                    {% else %}
 
-                            {% url 'login' as url_login %}
-                            <a class="btn btn-outline-primary {% if url_login == request.path %}active{% endif %}" href="{{ url_login }}">Вход</a>
+                        {% url 'login' as url_login %}
+                        <a class="btn btn-outline-primary {% if url_login == request.path %}active{% endif %}" href="{{ url_login }}">Вход</a>
 
-                            {% url 'register' as url_register %}
-                            <a class="btn btn-outline-primary {% if url_register == request.path %}active{% endif %}" href="{{ url_register }}">Регистрация</a>
+                        {% url 'register' as url_register %}
+                        <a class="btn btn-outline-primary {% if url_register == request.path %}active{% endif %}" href="{{ url_register }}">Регистрация</a>
 
-                            {% url 'cert_signature' as url_cert_signature %}
-                            <a class="btn btn-outline-primary {% if cert_signature == request.path %}active{% endif %}" href="{{ cert_signature }}">Личный кабинет</a>
+                        {% url 'account' as url_account %}
+                        <a class="btn btn-outline-primary {% if url_account == request.path %}active{% endif %}" href="{{ url_account }}">Личный кабинет</a>
 
-                        {% endif %}
+                    {% endif %}
 
-                    </li>
-                </ul>
-            </div>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>
 
-<div class="container mt-3">
+<div class="m-3">
     {% block content %}
-        <div class="alert alert-info" role="alert">
+        <div class="alert alert-info text-center" role="alert">
             Чтобы заказать справку войдите в личный кабинет
         </div>
 
         <div class="card mt-3">
             <div class="card-body">
-                <h5 class="card-title">Поданные заявки на выдачу справок</h5>
+                <div>
+                    <h5 class="float-left card-title">Поданные заявки на выдачу справок</h5>
+                    <nav aria-label="Page navigation example" class="float-right">
+                        <ul class="pagination pagination-sm card-text justify-content-end">
+                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover card-text">
                         <thead class="thead-light text-center">
                         <tr>
-                            <td>Форма</td>
-                            <td>Медицинское учереждение</td>
-                            <td>Email клиента</td>
-                            <td>Дата подачи</td>
-                            <td>Дата выдачи</td>
+                            <td class="align-middle">id</td>
+                            <td class="align-middle">Название формы</td>
+                            <td class="align-middle">Форма</td>
+                            <td class="align-middle">Медицинское учереждение</td>
+                            <td class="align-middle">Клиент</td>
+                            <td class="align-middle">Врач</td>
+                            <td class="align-middle">Дата подачи</td>
+                            <td class="align-middle">Дата выдачи</td>
+                            <td class="align-middle">Статус</td>
                         </tr>
                         </thead>
                         <tbody>
                         {% for filed_certificate in filed_certificates %}
                             <tr>
-                                <td>{{ filed_certificate.certificate_type }}</td>
-                                <td>{{ filed_certificate.hospital }}</td>
-                                <td>{{ filed_certificate.client }}</td>
-                                <td>{{ filed_certificate.created_date }}</td>
-                                <td>{{ filed_certificate.executed_date }}</td>
+                                <td class="align-middle text-right">{{ filed_certificate.id }}</td>
+                                <td class="align-middle">{{ filed_certificate.certificate_type.name }}</td>
+                                {% if filed_certificate.certificate_type.form == None %}
+                                    <td class="align-middle text-center">-</td>
+                                {% else %}
+                                    <td class="align-middle">{{ filed_certificate.certificate_type.form }}</td>
+                                {% endif %}
+                                <td class="align-middle">{{ filed_certificate.hospital }}</td>
+                                <td class="align-middle">{{ filed_certificate.client.username }}</td>
+
+                                {% if filed_certificate.doctor == "-" %}
+                                    <td class="align-middle text-center">-</td>
+                                {% else %}
+                                    <td class="align-middle">{{ filed_certificate.doctor }}</td>
+                                {% endif %}
+
+                                <td class="align-middle">{{ filed_certificate.created_date }}</td>
+                                {% if filed_certificate.status == True %}
+                                    <td class="align-middle">{{ filed_certificate.executed_date }}</td>
+                                    <td class="align-middle table-success text-center">Подтверждено</td>
+                                {% else %}
+                                    <td class="align-middle text-center">-</td>
+                                    <td class="align-middle table-secondary">В обработке</td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -85,15 +117,27 @@
 
         <div class="card mt-3">
             <div class="card-body">
-                <h5 class="card-title">Зарегестрированные пользователи</h5>
+                <div>
+                    <h5 class="float-left card-title">Зарегестрированные пользователи</h5>
+                    <nav aria-label="Page navigation example" class="float-right">
+                        <ul class="pagination pagination-sm card-text justify-content-end">
+                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                        </ul>
+                    </nav>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover card-text">
                         <thead class="thead-light text-center">
                         <tr>
                             <td>Email</td>
                             <td>Пользователь</td>
-                            <td>Дата регистрации</td>
-                            <td>Последний вход</td>
+                            <td>Сотудник мед. учереждения</td>
+{#                            <td>Дата регистрации</td>#}
+{#                            <td>Последний вход</td>#}
                             <td>Админ</td>
                             <td>Активный</td>
                             <td>Сотрудник</td>

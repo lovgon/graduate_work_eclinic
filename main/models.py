@@ -41,7 +41,7 @@ class Account(AbstractBaseUser):
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     # first_name = models.CharField(max_length=30)
-    hospital = models.ForeignKey('certificates.Hospital', on_delete=models.PROTECT, null=True)
+    hospital = models.ForeignKey('certificates.Hospital', on_delete=models.PROTECT, blank=True, null=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [

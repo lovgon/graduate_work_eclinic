@@ -2,19 +2,96 @@
 
 {% block content %}
     <div class="row">
-        <div class="col-3">
+        <div class="col-2">
             <div class="nav flex-column nav-pills">
-                <a href="{% url 'cert_signature' %}" class="nav-link">Заказанные справки</a>
+                {% if request.user.hospital != Null %}
+                    <a href="{% url 'cert_signature' %}" class="nav-link">Заказанные справки</a>
+                {% endif %}
                 <a href="{% url 'cert_order' %}" class="nav-link active">Справки</a>
                 <a href="{% url 'account' %}" class="nav-link">Профиль</a>
             </div>
         </div>
-        <div class="col-9">
+        <div class="col-10">
             <form method="POST" class="card card-body">
+                <h5 class="card-title">Закажите справку</h5>
                 {% csrf_token %}
                 {{ certificate_form }}
                 <button type="submit" class="btn btn-primary btn-block mt-3 col-3 mx-auto">Заказать справку</button>
             </form>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <div>
+                        <h5 class="float-left card-title">Ваши справки</h5>
+                        <nav aria-label="Page navigation example" class="float-right">
+                            <ul class="pagination pagination-sm card-text justify-content-end">
+                                <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover card-text">
+                            <thead class="thead-light text-center">
+                            <tr>
+                                <td class="align-middle">id</td>
+                                <td class="align-middle">Название формы</td>
+                                <td class="align-middle">Форма</td>
+                                <td class="align-middle">Медицинское учереждение</td>
+                                <td class="align-middle">Врач</td>
+                                <td class="align-middle">Дата подачи</td>
+                                <td class="align-middle">Дата выдачи</td>
+                                <td class="align-middle">Статус</td>
+                                <td class="align-middle">Действие</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for filed_certificate in filed_certificates %}
+                                {% if filed_certificate.client == request.user %}
+                                    <tr>
+                                        <td class="align-middle text-right">{{ filed_certificate.id }}</td>
+                                        <td class="align-middle">{{ filed_certificate.certificate_type.name }}</td>
+
+                                        {% if filed_certificate.certificate_type.form == None %}
+                                            <td class="align-middle text-center">-</td>
+                                        {% else %}
+                                            <td class="align-middle">{{ filed_certificate.certificate_type.form }}</td>
+                                        {% endif %}
+
+                                        <td class="align-middle">{{ filed_certificate.hospital }}</td>
+
+                                        {% if filed_certificate.doctor == "-" %}
+                                            <td class="align-middle text-center">-</td>
+                                        {% else %}
+                                            <td class="align-middle">{{ filed_certificate.doctor }}</td>
+                                        {% endif %}
+
+                                        <td class="align-middle">{{ filed_certificate.created_date }}</td>
+
+                                        {% if filed_certificate.status == "confirmed" %}
+                                            <td class="align-middle">{{ filed_certificate.executed_date }}</td>
+                                            <td class="align-middle table-success text-center">Подтверждено</td>
+                                            <td class="align-middle text-center"><a href="" class="btn btn-outline-primary btn-block">Скачать</a></td>
+                                        {% elif filed_certificate.status == "denied" %}
+                                            <td class="align-middle">{{ filed_certificate.executed_date }}</td>
+                                            <td class="align-middle table-danger text-center">Отказано</td>
+                                            <td class="align-middle text-center">-</td>
+                                        {% else %}
+                                            <td class="align-middle text-center">-</td>
+                                            <td class="align-middle table-secondary">В обработке</td>
+                                            <td class="align-middle text-center">-</td>
+                                        {% endif %}
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
