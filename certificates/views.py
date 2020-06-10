@@ -1,12 +1,13 @@
 import datetime
 
+from django.core.paginator import Paginator
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views import View
 from django.views.generic import CreateView, TemplateView, ListView
 
-from certificates.forms import CertificateForm, Type086
+from certificates.forms import CertificateForm
 from certificates.models import Certificate, ConfirmChoice
 
 
@@ -35,9 +36,9 @@ def cert_order(request):
         certificate_form = CertificateForm()
 
     filed_certificates = Certificate.objects.order_by(
-        'status',
+        'processed',
         '-executed_date',
-        '-created_date'
+        '-created_date',
     )
 
     context = {
@@ -57,23 +58,26 @@ def cert_signature(request):
         return redirect("cert_order")
 
     cert_signature_form = Certificate.objects.filter(hospital=request.user.hospital).order_by(
-        'status',
+        'processed',
         '-executed_date',
-        '-created_date'
+        '-created_date',
     )
 
+    paginator = Paginator(cert_signature_form, 10)
+    page_number = request.GET.get('page', 1)
+    page = paginator.get_page(page_number)
+
     context = {
-        "cert_signature_form": cert_signature_form,
-        'cert_types_form': {
-            '086/у': Type086
-        }
+        # "cert_signature_form": cert_signature_form,
+        "cert_signature_form": page,
     }
 
     return render(request, "account/cert_signature.html", context)
 
 
 class ApplyView(View):
-    def get(self, request, certificate_id):
+    def post(self, request, certificate_id):
+        print(request.POST)
         if not request.user.is_authenticated:
             raise PermissionError
 
@@ -83,11 +87,21 @@ class ApplyView(View):
 
         doctor = request.user.username
 
-        Certificate.objects.filter(id=certificate_id, hospital=hospital).update(
-            status=ConfirmChoice.CONFIRMED,
-            executed_date=datetime.datetime.now(),
-            doctor=doctor
-        )
+        certificate = Certificate.objects.filter(id=certificate_id, hospital=hospital).first()
+        if not certificate:
+            raise Http404
+
+        form = certificate.get_form()
+        form = form(request.POST)
+        form.is_valid()
+
+        certificate.processed = True
+        certificate.status = ConfirmChoice.CONFIRMED
+        certificate.executed_date = datetime.datetime.now()
+        certificate.doctor = doctor
+        certificate.additional_fields = form.cleaned_data
+        certificate.save()
+
         return redirect("cert_signature")
 
 
@@ -103,6 +117,7 @@ class DeniView(View):
         doctor = request.user.username
 
         Certificate.objects.filter(id=certificate_id, hospital=hospital).update(
+            processed=True,
             status=ConfirmChoice.DENIED,
             executed_date=datetime.datetime.now(),
             doctor=doctor

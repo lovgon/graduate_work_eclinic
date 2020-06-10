@@ -10,11 +10,15 @@ from certificates.models import Certificate
 def home_screen_view(request):
     accounts = Account.objects.order_by('-last_login')
 
-    filed_certificates = Certificate.objects.order_by(
-        'status',
-        '-executed_date',
-        '-created_date'
-    )
+    search_query = request.GET.get('search', '')
+    if search_query:
+        filed_certificates = Certificate.objects.filter(id=search_query)
+    else:
+        filed_certificates = Certificate.objects.order_by(
+            'processed',
+            '-executed_date',
+            '-created_date',
+        )
 
     context = {
         'accounts': accounts,

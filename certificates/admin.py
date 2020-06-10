@@ -6,6 +6,7 @@ from certificates.models import Hospital, CertificateType, Certificate, ConfirmC
 @admin.register(Hospital)
 class HospitalAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "name",
         "address",
     )
@@ -14,14 +15,17 @@ class HospitalAdmin(admin.ModelAdmin):
 @admin.register(CertificateType)
 class CertificateTypeAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "name",
         "form",
+        "short_name",
     )
 
 
 @admin.register(Certificate)
 class CertificateAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "certificate_type",
         "hospital",
         "client",
